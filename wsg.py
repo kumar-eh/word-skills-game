@@ -12,10 +12,32 @@ global shuffled
 # starting score is 0 #
 Score = 0 
 
+
+# opening file#
 file = open('dictionaryWords.txt', 'r+')
 
 root = Tk()
 
+# To check if the letters are in the shuffled word#
+def check_word(e):
+    global shuffled
+    list_str1 = list(e)
+    list_str1.sort()
+    list_str2 = list(shuffled)
+    list_str2.sort()
+    return (set(list_str1).issubset(set(list_str2)))
+
+
+def check_sixword(e):
+    global shuffled
+    list_str1 = list(e)
+    list_str1.sort()
+    list_str2 = list(shuffled)
+    list_str2.sort()
+    return (list_str1 == list_str2)
+
+
+#To increment score in widget#
 def counter_score(s):
     def counters():
         global Score
@@ -23,7 +45,7 @@ def counter_score(s):
         s.after(1000, counters)
     counters()
 
-
+# to increment score #
 def three_letter(s):
     global Score
     Score += 5
@@ -58,11 +80,15 @@ def answer(e):
                 for line in read_obj:
                     if e.casefold() in line.casefold():
                         if e not in lists:
-                            lists.append(e)
-                            three_letter(s)
-                            return
+                            if(check_word(e)):                                
+                                lists.append(e)
+                                three_letter(s)
+                                return
+                            else:
+                                print(showwarning("Alert" , "Letters mismatch"))
+                                return
                         else:
-                            print(showwarning("Alert" , "Word already entered"))
+                            print(showwarning("Alert" , "Word already entered"))  #pop up to entering a already entered word#
                             return
 
         if len(e) == 4:
@@ -70,9 +96,13 @@ def answer(e):
                 for line in read_obj:
                     if e.casefold() in line.casefold():
                         if e not in lists:
-                            lists.append(e)
-                            four_letter(s)
-                            return
+                            if(check_word(e)):
+                                lists.append(e)
+                                four_letter(s)
+                                return
+                            else:
+                                print(showwarning("Alert" , "Letters mismatch"))
+                                return
                         else:
                             print(showwarning("Alert" , "Word already entered"))
                             return
@@ -85,9 +115,13 @@ def answer(e):
                 for line in read_obj:
                     if e.casefold() in line.casefold():
                         if e not in lists:
-                            lists.append(e)
-                            five_letter(s)
-                            return
+                            if(check_word(e)):                         
+                                lists.append(e)
+                                five_letter(s)
+                                return
+                            else:
+                                print(showwarning("Alert" , "Letters mismatch"))
+                                return
                         else:
                             print(showwarning("Alert" , "Word already entered"))
                             return
@@ -99,11 +133,15 @@ def answer(e):
                 for line in read_obj:
                     if e.casefold() in line.casefold():
                         if e not in lists:
-                            lists.append(e)
-                            six_letter(s)
-                            return
+                            if(check_sixword(e)):     
+                                lists.append(e)
+                                six_letter(s)
+                                return
+                            else:
+                                print(showwarning("Alert" , "Letters mismatch"))
+                                return
                         else:
-                            print(showwarning("ALert" , "Word already entered"))
+                            print(showwarning("Alert" , "Word already entered"))
                             return
 
 
@@ -132,7 +170,8 @@ def counter_label(timer):
 
     
 # for choosing a random a six letter word form the file#
-def question(word):  
+def question(word):
+    global shuffled
     while True:
         words = random.choice(open('dictionaryWords.txt').read().split()).strip()
         if len(words) == 6:
